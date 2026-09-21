@@ -26,5 +26,9 @@ jobs:
         run: |
           printf '{"tools":[{"name":"x","inputSchema":{"type":"object"}}]}' > before.json
           printf '{"tools":[]}' > after.json
+          set +e
           python -m mcp_changeguard.cli before.json after.json --json --fail-on breaking
+          code=$?
+          set -e
           rm before.json after.json
+          test "$code" -eq 1
